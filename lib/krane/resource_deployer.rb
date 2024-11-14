@@ -49,8 +49,15 @@ module Krane
       predeploy_sequence.each do |resource_type, attributes|
         matching_resources = resource_list.select do |r|
           r.type == resource_type &&
-          (!attributes[:group] || r.group == attributes[:group])
+          (!attributes[:group] || r.group == attributes[:group]) &&
+          r.predeployed?
         end
+
+        logger.info("Predeploying resources of type #{resource_type}:")
+        matching_resources.each do |resource|
+          logger.info("- #{resource.id} with predeployed annotation")
+        end
+
         StatsD.client.gauge('priority_resources.count', matching_resources.size, tags: statsd_tags)
 
         next if matching_resources.empty?
