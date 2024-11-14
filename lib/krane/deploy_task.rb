@@ -70,13 +70,13 @@ module Krane
       ).map { |r| [r, default_group] }
 
       after_crs = %w(
+        Deployment
+        Service
         Pod
       ).map { |r| [r, default_group] }
 
       crs = cluster_resource_discoverer.crds.select(&:predeployed?).map { |cr| [cr.kind, { group: cr.group }] }
-      deployment = cluster_resource_discoverer.deployments.select(&:predeployed?).map { |deployment| [deployment.kind, { group: deployment.group }] }
-      svc = cluster_resource_discoverer.services.select(&:predeployed?).map { |svc| [svc.kind, { group: svc.group }] }
-      Hash[before_crs + crs + deployment + svc + after_crs]
+      Hash[before_crs + crs + after_crs]
     end
 
     def prune_allowlist
