@@ -53,11 +53,6 @@ module Krane
           r.predeployed?
         end
 
-        logger.info("Predeploying resources of type #{resource_type}:")
-        matching_resources.each do |resource|
-          logger.info("- #{resource.id} with predeployed annotation")
-        end
-
         StatsD.client.gauge('priority_resources.count', matching_resources.size, tags: statsd_tags)
 
         next if matching_resources.empty?
